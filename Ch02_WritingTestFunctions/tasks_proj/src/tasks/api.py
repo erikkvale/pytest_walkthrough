@@ -50,7 +50,7 @@ def get(task_id):  # type: (int) -> Task
     return Task(**task_dict)
 
 
-def list_tasks(owner=None):  # type: (str|None) -> list of Task
+def list_tasks(owner=None):  # type: (str|None) -> list
     """Return a list of Task objects."""
     if owner and not isinstance(owner, string_types):
         raise TypeError('owner must be a string')
