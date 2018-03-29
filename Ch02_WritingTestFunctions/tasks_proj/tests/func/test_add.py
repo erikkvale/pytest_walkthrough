@@ -31,3 +31,16 @@ def test_added_task_has_id_set():
 
     # THEN task_id matches id field
     assert task_from_db.id == task_id
+
+
+@pytest.fixture(autouse=True)
+def initialized_tasks_db(tmpdir):
+    """Connect to db before testing, disconnect after"""
+    # SETUP: start db
+    tasks.start_tasks_db(str(tmpdir), 'tiny')
+
+    yield # Where the test occurs
+
+    # Teardown: stop db
+    tasks.stop_tasks_db()
+
