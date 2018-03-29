@@ -52,3 +52,42 @@ def test_add_3(summary, owner, done):
     task_id = tasks.add(task)
     t_from_db = tasks.get(task_id)
     assert equivalent(t_from_db, task)
+
+
+# Cleaner way of maintaining verbose test info while cleaning the decorator up
+tasks_to_try = (
+    Task('sleep', done=True),
+    Task('wake', 'brian'),
+    Task('wake', 'brian'),
+    Task('breathe', 'BRIAN', True),
+    Task('exercise', 'BrIaN', False),
+)
+
+task_ids = [
+    'Tasks({},{}.{})'.format(t.summary, t.owner, t.done)
+    for t in tasks_to_try
+]
+
+@pytest.mark.parametrize('task', tasks_to_try, ids=task_ids)
+def test_add_5(task):
+    """Demonstrate ids"""
+    task_id = tasks.add(task)
+    t_from_db = tasks.get(task_id)
+    assert equivalent(t_from_db, task)
+
+
+@pytest.mark.parametrize('task', tasks_to_try, ids=task_ids)
+class TestAdd:
+    """
+    Demonstrate parametrize and test classes
+    """
+
+    def test_equivalent(self, task):
+        task_id = tasks.add(task)
+        t_from_db = tasks.get(task_id)
+        assert equivalent(t_from_db, task)
+
+    def test_valid_id(self, task):
+        task_id = tasks.add(task)
+        t_from_db = tasks.get(task_id)
+        assert t_from_db.id == task_id
